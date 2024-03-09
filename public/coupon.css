@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(#fff, #ffd6d6);
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 100px;
+    background: #e99595;
+}
+header img{
+    margin-top: -20px;
+}
+.wrapper {
+    margin-top: 100px;
+}
+
+.list .list-group {
+    background-color: #f3a9a9;
+    height: 500px;
+}
+/* CSS for Add Coupon Form */
+form {
+    margin-top: 20px;
+    width: 50%;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+form div {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color:  #f3a9a9;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color:  #da2121;
+}
+    /* CSS for coupons container */
+.coupons-container {
+    margin-top: 20px;
+}
+
+/* CSS for coupons list */
+.coupons-list {
+    display: flex;
+/* CSS for coupons container */
+.coupons-container {
+    margin-top: 20px;
+}
+
+/* CSS for coupons list */
+.coupons-list {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping onto multiple lines */
+    overflow-x: auto; /* Enable horizontal scrolling if needed */
+}
+
+/* CSS for individual coupon item */
+.coupon-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    width: 300px;
+}
+
+/* CSS for coupon code */
+.coupon-code {
+    font-weight: bold;
+}
+
+/* CSS for no coupons message */
+.no-coupons-message {
+    color: #888;
+    font-style: italic;
+}
+
+}
+
+/* CSS for individual coupon item */
+.coupon-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    width: 300px;
+}
+
+/* CSS for coupon code */
+.coupon-code {
+    font-weight: bold;
+}
+
+/* CSS for no coupons message */
+.no-coupons-message {
+    color: #888;
+    font-style: italic;
+}

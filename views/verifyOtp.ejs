@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>verifyotp</title>
+    <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+    <div class="wrapper">
+        <form action="/user/verify" method="post">
+          <div class="input-box">
+            <input type="text" placeholder="OTP" name="otp">
+          </div>
+          <button class="btn" type="submit">Verify</button>
+        </form>
+        <div class="countdown-box">
+          <span id="countdown">1:00</span>
+          <a href="#" id="resendLink" style="display:none;">Resend OTP</a>
+        </div>
+      
+        <% if (typeof successMessage !== 'undefined') { %>
+          <p style="color: green; text-align: center;"><%= successMessage %></p>
+        <% } else if (typeof error !== 'undefined') { %>
+          <p style="color: rgb(14, 13, 13); text-align: center;"><%= error %></p>
+        <% } %>
+      
+        <script>
+          // Function to start the countdown timer
+          function startCountdown(durationInSeconds) {
+            let timer = durationInSeconds;
+            const countdownElement = document.getElementById("countdown");
+            const resendLink = document.getElementById("resendLink");
+      
+            const countdownInterval = setInterval(function () {
+              const minutes = Math.floor(timer / 60);
+              const seconds = timer % 60;
+      
+              countdownElement.textContent = `${minutes}:${seconds}`;
+      
+              if (--timer < 0) {
+                clearInterval(countdownInterval);
+      
+                // Show the "Resend OTP" link
+                resendLink.style.display = "inline";
+                countdownElement.textContent = "0:00";
+              }
+            }, 1000);
+          }
+      
+         
+          document.addEventListener("DOMContentLoaded", function () {
+         
+            const durationInSeconds = 60
+            startCountdown(durationInSeconds);
+          });
+      
+          document.getElementById("resendLink").addEventListener("click", function (event) {
+            event.preventDefault(); 
+      
+          
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/user/resend-otp", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+      
+            xhr.onload = function () {
+              if (xhr.status === 200) {
+             
+                const durationInSeconds = 60
+                startCountdown(durationInSeconds);
+                
+               
+              } else {
+                console.error("Error resending OTP");
+              }
+            };
+      
+            xhr.onerror = function () {
+              console.error("Network error occurred");
+            };
+      
+            xhr.send(JSON.stringify({}));
+          });
+        </script>
+      </div>
+      
+      </div>
+      
+      </div>
+</body>
+</html>

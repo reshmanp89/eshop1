@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watchhut</title>
+    <link rel="stylesheet" href="/singleproduct.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kaisei+Tokumin:wght@400;500;700&family=Lobster+Two&family=Oswald:wght@300;500&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,300&display=swap"
+        rel="stylesheet">
+    <script src="https://kit.fontawesome.com/99a477596c.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <img src="/image/Logo.png" alt="" width="100px">
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="">Home</a></li>
+                        <li><a href="">Product</a></li>
+                        <li><a href="">About</a></li>
+                        <li><a href="">Contact</a></li>
+                        <% if (typeof user !== 'undefined') { %>
+                            <% if (user) { %>
+                               
+                                <li><a href="/user/logout">Logout</a></li>
+    
+                                <li><a href="/user/cart"><i class="fas fa-cart-shopping"></i></a></li>
+                                <li  class="text-danger"><a href="/user/profile"><i class="fa-solid fa-user   "></i>Hello,<%= user.username %></a></li>
+                            <% } else { %>
+                             
+                                <li><a href="/user/login">Login</a></li>
+                            <% } %>
+                            <% } %>
+                    </ul>
+                </nav>
+                <span class="menu-icon"><i class="fas fa-bars"></i></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- product details -->
+    <div class="single-product container">
+        <div class="row">
+            <div class="col-2">
+                <div class="img-container"><img src="<%= product.image %>" alt="" width="100%"  id="productImg"  ></div>
+                <!-- Multiple images -->
+                <div class="small-img-row">
+                    <% product.images.slice(0, 4).forEach(image => { %>
+                        <div class="small-img-col">
+                            <img src="<%= image %>" alt="" width="100%"  class="small-img">
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+            <div class="col-2">
+                <h1 class="text-success"><%= product.productName %></h1>
+                <p><%= product.brand %></p>
+                <h5><%= product.category.name %></h5>
+                <div class="rating">
+                    <% for (let i = 0; i < product.rating; i++) { %>
+                        <i class="fa fa-star"></i>
+                    <% } %>
+                    <% for (let i = 0; i < 5 - product.rating; i++) { %>
+                        <i class="fa fa-star-o"></i>
+                    <% } %>
+                </div>
+                <h4 class="fw-bold">₹<%= product.price %></h4>
+
+                           <!-- Add to Cart Form -->
+            <form action="/user/cart" method="post">
+                <input type="hidden" name="productId" value="<%= product._id %>">
+                <label for="quantity">Quantity:</label>
+                <input class='cartQuantity' type="number" name="quantity" value="1" min="1">
+                <br>
+                <button type="submit" class="btn">Add To Cart</button>
+            
+            </form>
+                
+                <a href="" class="btn">Buy now</a>
+                <hr>
+                <p><strong>Product details</strong></p>
+                <p>
+                    <% const descriptionLines = product.description.split('\n'); %>
+                    <% descriptionLines.forEach(line => { %>
+                        <%= line %><br>
+                    <% }); %>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer>
+        <div class="foot-container items">
+            <ul class="footer-list">
+                <li class="caption">Company</li>
+                <li>About</li>
+                <li>Careers</li>
+                <li>Team</li>
+                <li>Visit Our Showroom</li>
+            </ul>
+        </div>
+        <div class="foot-container items">
+            <ul class="footer-list">
+                <li class="caption">Contact us</li>
+                <li>Help & Support</li>
+                <li>Partner With Us</li>
+                <li>Ride With us</li>
+                <li class="caption"> Legal</li>
+                <li>Terms & Conditions</li>
+                <li>Cookie Policy</li>
+                <li>Privacy policy</li>
+            </ul>
+        </div>
+        <div class="foot-container items">
+            <div>
+                <div> <img src="/image/Logo.png" alt="" style="width: 150px; height: 150px;"></div>
+                <div>
+                    <p>All trademarks are properties of their respective owners. 2008-2023 © WATCHHUT Ltd. All rights
+                        reserved</p>
+                </div>
+            </div>
+        </div>
+        <div class="foot-container items">
+            <ul class="footer-list">
+                <li class="caption">Social links</li>
+                <li><i class="fab fa-linkedin"></i>
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-youtube"></i>
+                    <i class="fab fa-twitter"></i>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+  var productImg=document.getElementById('productImg');
+  var smallimages=document.querySelectorAll('.small-img')
+     smallimages.forEach((smallimage,index)=>{
+        smallimage.onclick=function(){
+            productImg.src=smallimage.src
+        }
+     })
+    
+
+     //zoom product
+     document.getElementsByClassName('img-container').forEach(elem=>{
+
+let x,y,width,height;
+elem.onmouseenter =()=>{
+    const size=elem.getBoundingClientRect();
+    x=size.x;
+    y=size.y;
+    width=size.width;
+    height=size.height
+};
+elem.onmousemove = e =>{
+    const horizontal =(e.clientX - x)/width*100;
+    const vertical =(e.clientY - y)/height*100;
+    elem.style.setProperty('--x',horizontal +'%')
+    elem.style.setProperty('--y',vertical + '%')
+}
+})
+    </script>
+</body>
+
+</html>

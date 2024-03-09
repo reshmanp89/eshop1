@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>adminDashboard</title>
+    <link rel="stylesheet" href="/login.css">
+</head>
+
+<body>
+
+    <div class="category-management-container">
+        <div class="category-form-container  mt-5 p-5">
+          <h2>Add Category</h2>
+          <form action="/admin/editCategory/<%= category.id %>" method="post">
+            <label for="categoryName">Category Name:</label>
+            <input type="text" id="categoryName" name="name" value= "<%= category.name %>" required>
+            <button type="submit">Add Category</button>
+          </form>
+        </div>
+
+
+   
+</body>
+
+</html>

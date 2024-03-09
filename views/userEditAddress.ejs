@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Address</title>
+    <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+    <div class="wrapper">
+        <% if (typeof address !== 'undefined') { %>
+        <form action="/user/editAddress/<%= address._id %>" method="POST">
+            <h1>Edit Address</h1>
+            
+            <div class="input-box">
+                <input type="text" placeholder="Street" id="street" name="street"  value="<%= address.street %>" >
+            </div>
+            
+            <div class="input-box">
+                <input type="text" placeholder="City" id="city" name="city"  value="<%= address.city %>" >
+            </div>
+            
+            <div class="input-box">
+                <input type="text" placeholder="State" id="state" name="state"  value="<%= address.state %>" >
+            </div>
+            
+            <div class="input-box">
+                <input type="text" placeholder="Pin Code" id="pincode" name="pincode"  value="<%= address.pincode %>" >
+            </div>
+            
+            <div class="input-box">
+                <input type="text" placeholder="Mobile" id="mobile" name="mobile" value="<%= address.mobile %>">
+            </div>
+
+            <button class="btn" type="submit">Update</button>
+        </form>
+        <% }; %>
+        <% if (typeof error !== 'undefined') { %>
+            <p style="color: white; text-align: center;"><%= error %></p>
+            <% }%>
+       
+    </div>
+</body>
+</html>

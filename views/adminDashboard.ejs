@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product</title>
+    <link rel="stylesheet" href="/category.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kaisei+Tokumin:wght@400;500;700&family=Lobster+Two&family=Oswald:wght@300;500&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,300&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+</head>
+
+<body>
+    <header class="bg-light " style="position:sticky;width:100%;top:0;z-index: 1; height: 100px;">
+        <div class="row p-2">
+            <div class="col-md-4 col-4 text-center">
+                <img src="/image/Logo.png" alt="" style="width: 100px;">
+            </div>
+            <div class="col-md-4 col-5 mt-4">
+                <h3 class=" text-center font-weight-bold tect-success ">Welocome Admin!</h3>
+            </div>
+            <div class="col-md-4 col-3">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+
+                        <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item px-2">
+                                    <a class="nav-link active  text-center" href="/">HOME</a>
+                                </li>
+                                <li class="nav-item px-2">
+                                    <a class="nav-link active text-center" href="/admin/dashboard">DASHBOARD</a>
+                                </li>
+                               
+                                <li class="nav-item px-2">
+                                    <a class="nav-link active text-center" href="/admin/logout">LOGOUT</a>
+
+                                </li>
+
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+    </header>
+  
+    <div class="container wrapper">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="list">
+
+                    <div class="sidebar-heading text-center  py-4 primary-text fs-4 fw-bold text-uppercase  ">
+                        Admin Dashboard
+                    </div>
+                    <div class="list-group list-group-flush my-3  ">
+
+                        <a href="/admin/product"
+                            class="list-group-item list-group-item-action bg-transparent second-text fw-bold ">
+                            Product Management
+                        </a>
+                        <a href="/admin/userManagement"
+                            class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                            User Management
+                        </a>
+                        <a href="/admin/categoryManagement"
+                            class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                            Category Management
+                        </a>
+                        <a href="/admin/orderManagement"
+            class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+            Oreder Management
+          </a>
+          <a href="/admin/couponManagement"
+                            class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                            Coupon Management
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="container   p-5">
+ <div class="row  mt-5 p-2 mb-5" >
+  <div class="col-md-4 ">
+    <div class="info-box bg-info p-2">
+        <h4 class="text-center text-light">Total Sale</h4>
+        <% if (typeof totalSale!== 'undefined') { %>
+        <p class="text-center text-light"><%= totalSale %></p>
+        <% }%> 
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="info-box bg-success p-2">
+        <h4 class="text-center text-light">Total Orders</h4>
+        <% if (typeof totalOrders!== 'undefined') { %>
+        <p class="text-center text-light"><%= totalOrders %></p>
+        <% }%> 
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="info-box bg-danger  p-2">
+        <h4 class="text-center text-light ">Canceled Orders</h4>
+        <% if (typeof canceledOrders!== 'undefined') { %>
+        <p class="text-center text-light"><%= canceledOrders %></p>
+        <% }%> 
+    </div>
+</div>
+ </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <h3>Sales Report</h3>
+       
+                    <label for="interval">Select Interval:</label>
+                    <select id="interval">
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="yearly">Yearly</option>
+                    </select>
+                
+                    <div id="chartContainer" class="mt-5">
+                      <canvas id="salesChart" ></canvas>
+                    </div>
+    </div>
+    <div class="col-md-4">
+      <h3>Category chart</h3>
+                    <div  class="mt-5">
+                      <canvas id="categorySalesChart" width="400" height="200"></canvas>
+                  </div>
+    </div>
+    <div class="col-md-4">
+      <h3>Product quantity</h3>
+      <div  class="mt-5 ">
+        <canvas id="productQuantityChart" style="width: 200px; height: 200px;"></canvas>
+    </div>
+    </div>
+  </div>
+
+  <div class="row  mt-5">
+    <div class="col-md-6">
+      <h4  class="mt-5">Sales Report Excel</h4>
+
+  <form action="/admin/generate-report" method="post" >
+    <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" required><br><br>
+        
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" required><br><br>
+      <label for="reportType">Select Report Type:</label>
+      <select name="reportType" id="reportType">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="yearly">Yearly</option>
+      </select>
+      <button type="submit">Download Report</button>
+  </form>            
+    </div>
+    <div class="col-md-6">
+      <h4  class="mt-5">Sales Report Pdf</h4>
+      <form action="/admin/generate-reportpdf" method="post">
+          <label for="startDate">Start Date:</label>
+          <input type="date" id="startDate" name="startDate" required><br><br>
+          
+          <label for="endDate">End Date:</label>
+          <input type="date" id="endDate" name="endDate" required><br><br>
+        
+          <button type="submit">Download Report</button>
+      </form>
+    </div>
+  </div>
+  <div class="row  container w-75">
+    <div class="col-md-6 mt-5">
+        <h6 class="mt-5 text-danger">Top 10 Best Selling Products:</h6>
+        <ul class="list-group bg-light">
+            <% topProducts.forEach(product => { %>
+                <li class="list-group-item"><%= product.productName %></li>
+            <% }); %>
+        </ul>
+    </div>
+    <div class="col-md-6 mt-5">
+        <h6 class="mt-5 text-danger" >Top 10 Best Selling Categories:</h6>
+        <ul class="list-group">
+          <% topCategories.forEach(category => { %>
+            <li class="list-group-item"><%= category.name %> </li>
+        <% }); %>
+        </ul>
+    </div>
+</div>
+  <!-- <h4  class="mt-5">Sales Report</h4>
+
+  <form action="/admin/generate-report" method="post" >
+    <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" required><br><br>
+        
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" required><br><br>
+      <label for="reportType">Select Report Type:</label>
+      <select name="reportType" id="reportType">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="yearly">Yearly</option>
+      </select>
+      <button type="submit">Download Report</button>
+  </form>             -->
+<!-- <h3>Sales Report</h3>
+       
+                    <label for="interval">Select Interval:</label>
+                    <select id="interval">
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="yearly">Yearly</option>
+                    </select>
+                
+                    <div id="chartContainer">
+                      <canvas id="salesChart" ></canvas>
+                    </div>
+                    <h3>Category chart</h3>
+                    <div>
+                      <canvas id="categorySalesChart" width="400" height="200"></canvas>
+                  </div>
+                   <div>
+                    <div>
+                      <canvas id="productQuantityChart" style="width: 200px; height: 200px;"></canvas>
+                  </div>
+                  
+                   </div> -->
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        let salesChart; // Define chart instance globally
+      
+        // Function to fetch sales data based on selected interval
+        async function fetchSalesData(interval) {
+          try {
+            const response = await fetch(`/admin/sales/${interval}`);
+            if (!response.ok) {
+              throw new Error('Failed to fetch data');
+            }
+            const data = await response.json();
+            return data.sales;
+          } catch (error) {
+            console.error('Error fetching sales data:', error);
+            return [];
+          }
+        }
+      
+        // Function to process sales data and extract dates and sales amount for each sale
+        function processSalesData(salesData) {
+          const dates = salesData.map(sale => new Date(sale.createdDate).toLocaleDateString());
+          const salesAmounts = salesData.map(sale => sale.totalAmount);
+          return { dates, salesAmounts };
+        }
+      
+        // Function to render or update chart based on sales data
+        async function renderOrUpdateChart(interval) {
+          const salesData = await fetchSalesData(interval);
+          const { dates, salesAmounts } = processSalesData(salesData);
+          const chartLabel = getChartLabel(interval);
+      
+          if (!salesChart) {
+            renderChart(dates, salesAmounts, chartLabel);
+          } else {
+            updateChart(dates, salesAmounts, chartLabel);
+          }
+        }
+      
+        // Function to render chart based on sales data
+        function renderChart(dates, salesAmounts, chartLabel) {
+          const ctx = document.getElementById('salesChart').getContext('2d');
+          salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: dates,
+              datasets: [{
+                label: chartLabel,
+                data: salesAmounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                xAxes: [{
+                  ticks: {
+                    autoSkip: false,
+                    maxRotation: 45,
+                    minRotation: 45
+                  }
+                }],
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+              }
+            }
+          });
+        }
+      
+        // Function to update existing chart with new data
+        function updateChart(dates, salesAmounts, chartLabel) {
+          salesChart.data.labels = dates;
+          salesChart.data.datasets[0].data = salesAmounts;
+          salesChart.data.datasets[0].label = chartLabel;
+          salesChart.update();
+        }
+      
+        // Function to get chart label based on interval
+        function getChartLabel(interval) {
+          if (interval === 'daily') {
+            return 'Daily Sales';
+          } else if (interval === 'weekly') {
+            return 'Weekly Sales';
+          } else if (interval === 'yearly') {
+            return 'Yearly Sales';
+          }
+          return '';
+        }
+      
+        // Initial render of chart
+        renderOrUpdateChart(document.getElementById('interval').value);
+      
+        // Event listener for interval change
+        document.getElementById('interval').addEventListener('change', function() {
+          renderOrUpdateChart(this.value);
+        });
+    
+
+        let categorySalesChart; 
+
+// Function to fetch category sales data
+async function fetchCategorySalesData() {
+  try {
+    const response = await fetch('/admin/categorysales');
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    const data = await response.json();
+    return data.categorySales;
+  } catch (error) {
+    console.error('Error fetching category sales data:', error);
+    return [];
+  }
+}
+
+// Function to process category sales data
+function processCategorySalesData(categorySalesData) {
+  const categories = categorySalesData.map(categorySale => categorySale.category);
+  const salesAmounts = categorySalesData.map(categorySale => categorySale.totalAmount);
+  return { categories, salesAmounts };
+}
+
+// Function to render category sales chart
+function renderCategorySalesChart(categories, salesAmounts) {
+  const ctx = document.getElementById('categorySalesChart').getContext('2d');
+  categorySalesChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: categories, // Use category names as labels
+      datasets: [{
+        label: 'Category Sales',
+        data: salesAmounts,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+
+// Function to update category sales chart
+function updateCategorySalesChart(categories, salesAmounts) {
+  categorySalesChart.data.labels = categories;
+  categorySalesChart.data.datasets[0].data = salesAmounts;
+  categorySalesChart.update();
+}
+
+
+async function renderCategorySales() {
+  const categorySalesData = await fetchCategorySalesData();
+  const { categories, salesAmounts } = processCategorySalesData(categorySalesData);
+  renderCategorySalesChart(categories, salesAmounts);
+}
+
+
+renderCategorySales();
+
+let productQuantityChart; // Define chart instance globally
+
+// Function to fetch product data
+async function fetchProductData() {
+    try {
+        const response = await fetch('/admin/products');
+        if (!response.ok) {
+            throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        return data.products;
+    } catch (error) {
+        console.error('Error fetching product data:', error);
+        return [];
+    }
+}
+
+// Function to process product data
+// Function to process product data
+function processProductData(products) {
+    // Create an object to store unique product names as keys
+    const uniqueProductNames = {};
+
+    // Iterate over the products array and add unique product names to the object
+    products.forEach(product => {
+        uniqueProductNames[product.productName] = true;
+    });
+
+    // Extract the unique product names from the object
+    const productNames = Object.keys(uniqueProductNames);
+
+    // Create an array to store quantities corresponding to unique product names
+    const productQuantities = [];
+
+    // Iterate over the unique product names and sum up the quantities for each product
+    productNames.forEach(productName => {
+        const quantity = products.reduce((total, product) => {
+            if (product.productName === productName) {
+                return total + product.quantity;
+            }
+            return total;
+        }, 0);
+        productQuantities.push(quantity);
+    });
+
+    return { productNames, productQuantities };
+}
+
+
+// Function to render product quantity pie chart
+function renderProductQuantityChart(productNames, productQuantities) {
+    const ctx = document.getElementById('productQuantityChart').getContext('2d');
+    productQuantityChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: productNames, // Use product names as labels
+            datasets: [{
+                label: 'Product Quantity',
+                data: productQuantities,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(229, 69, 81, 0.8)',
+                    'rgba(217, 229, 69, 0.8)'
+                    
+                    // Add more colors if needed
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                    // Add more colors if needed
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+// Initial render of product quantity pie chart
+async function renderProductQuantity() {
+    const products = await fetchProductData();
+    const { productNames, productQuantities } = processProductData(products);
+    renderProductQuantityChart(productNames, productQuantities);
+}
+
+// Call the function to render product quantity pie chart
+renderProductQuantity();
+
+
+      </script>
+      
+      
+</body>
+
+</html>

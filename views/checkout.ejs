@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="/checkout.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <img src="/image/Logo.png" alt="" width="100px">
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="">Home</a></li>
+                        <li><a href="">Product</a></li>
+                        <li><a href="">About</a></li>
+                        <li><a href="">Contact</a></li>
+                        <li><a href="/user/logout">Logout</a></li>
+                        <li><a href=""><i class="fas fa-cart-shopping"></i></a></li>
+                    </ul>
+                </nav>
+                <span class="menu-icon"><i class="fas fa-bars"></i></span>
+            </div>
+        </div>
+    </div>
+<!-- order details -->
+
+
+<!-- Your EJS template file (checkout.ejs) -->
+
+<div class="cart-items container w-50">
+  <h1>Order Details</h1>
+  <% if (cart && cart.products.length > 0) { %>
+    <div class="small-container w-50 cart-page">
+      <table>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+        </tr>
+        <% let total = 0; %>
+        <% cart.products.forEach(item => { %>
+          <tr>
+            <td>
+              <div class="cart-info">
+                <img src="<%= item.product.image %>" alt="<%= item.product.productName %>">
+                <div>
+                  <p><%= item.product.productName %></p>
+                  <small>Price: ₹<%= item.product.price %></small>
+                  <br>
+                  <a href="/user/cart/remove/<%= item.product._id %>">Remove</a>
+                </div>
+              </div>
+            </td>
+            <td>Quantity: <%= item.quantity %></td>
+            <td class="subtotal">₹<%= item.product.price * item.quantity %></td>
+            <% total += item.product.price * item.quantity; %>
+          </tr>
+        <% }); %>
+        <tr>
+          <td>Shipping</td>
+          <td>Free</td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td id="cartTotal">₹<%= total %></td>
+        </tr>
+      </table>
+      <input type="hidden" id="totalAmount" value="<%= total %>">
+    </div>
+  <% } else { %>
+    <p>Your cart is empty.</p>
+  <% } %>
+     <!-- Display available coupons
+     <div class="coupon-section">
+      <label for="coupon">Select Coupon:</label>
+      <select id="coupon" name="coupon" class="form-select mb-3">
+          <% if (coupons && coupons.length > 0) { %>
+              <% coupons.forEach(coupon => { %>
+                  <option value="<%= coupon.code %>"><%= coupon.code %> - <%= coupon.discountType %> (<%= coupon.discountPercentage %>%)</option>
+              <% }); %>
+          <% } else { %>
+              <option value="" disabled>No coupons available</option>
+          <% } %>
+      </select>
+      <input type="text" id="selectedCoupon" name="selectedCoupon" class="form-control mb-3" placeholder="Enter Coupon Code">
+      <button id="applyCouponBtn" class="btn btn-primary">Apply Coupon</button>
+  </div>
+   -->
+   <div class="coupon-section">
+    <label for="coupon">Select Coupon:</label>
+    <select id="coupon" name="coupon" class="form-select mb-3">
+        <% if (coupons && coupons.length > 0) { %>
+            <% const flatCoupons = coupons.filter(coupon => coupon.discountType === 'flat'); %>
+            <% const percentageCoupons = coupons.filter(coupon => coupon.discountType === 'percentage'); %>
+            <% if (flatCoupons.length > 0) { %>
+                <optgroup label="Flat Coupons">
+                    <% flatCoupons.forEach(coupon => { %>
+                      <option value="<%= coupon.code %>"><%= coupon.code %> - <%= coupon.discountType %> (<%= coupon.discountAmount %>Rsoff) </option>
+                    <% }); %>
+                </optgroup>
+            <% } %>
+            <% if (percentageCoupons.length > 0) { %>
+                <optgroup label="Percentage Coupons">
+                    <% percentageCoupons.forEach(coupon => { %>
+                      <option value="<%= coupon.code %>"><%= coupon.code %> - <%= coupon.discountType %> (<%= coupon.discountPercentage %>% off) </option>
+                    <% }); %>
+                </optgroup>
+            <% } %>
+        <% } else { %>
+            <option value="" disabled>No coupons available</option>
+        <% } %>
+    </select>
+   
+</div>
+<div id="errorMessage" class="error-message"></div>
+
+</div>
+<div id="updatedTotalSection" class="mb-3"></div>
+
+<!-- Address Selection -->
+<div class="address-selection container w-50">
+  <h2>Select Shipping Address</h2>
+  <a href="/user/manageAdresses" class="btn">Add Address</a>
+  <form action="/user/placeorder" method="POST" id="orderForm">
+    <!-- Display user's addresses -->
+    <label for="address">Select Address:</label>
+    <% if (typeof user !== 'undefined') { %>
+      <select id="address" name="addressId" class="form-select mb-3">
+        <% user.addresses.forEach(address => { %>
+          <option value="<%= address._id %>">
+            <%= address.street %>, <%= address.city %>, <%= address.state %> - <%= address.pincode %>
+          </option>
+        <% }); %>
+      </select>
+    <% } %>
+    <br>
+    <label>Select Payment Method:</label>
+    <div class="mb-3">
+      <input type="radio" id="COD" name="paymentMethod" value="COD">
+      <label for="creditCard">COD</label>
+    </div>
+    <div id="errorMessage" class="error-message"></div>
+
+    <div class="mb-3">
+      <input type="radio" id="razorpay" name="paymentMethod" value="razorpay">
+      <label for="razorpay">Razorpay</label>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="handlePayment()">Place Your Order</button>
+  </form>
+</div>
+
+<!-- Modal HTML -->
+<div id="errorModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="errorModalContent"></p>
+  </div>
+</div>
+
+<!-- Razorpay Integration Script -->
+
+<script>
+
+ 
+function handlePayment() {
+  const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+  if (selectedPaymentMethod === 'razorpay') {
+    const totalAmount = document.getElementById('totalAmount').value;
+    const coupon = document.getElementById('coupon').value; // Get the selected coupon
+
+    fetch('/user/placeorder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        addressId: document.getElementById('address').value,
+        paymentMethod: 'razorpay', // Hardcode payment method for now
+        totalAmount: totalAmount,
+        coupon: coupon // Include the coupon information in the request body
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Check if the response contains an error message
+      if (data.errorMessage) {
+        // Show the error message in an alert box
+        alert(data.errorMessage);
+      } else {
+        // Proceed with Razorpay payment
+        const options = {
+          key: 'rzp_test_LMzjR4ggpHurDo',
+          amount: totalAmount * 100,
+          currency: 'INR',
+          order_id: data.razorpayOrderID,
+          handler: function(response) {
+            window.location.href = '/user/ordersuccess';
+          }
+        };
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (response){
+          alert('Payment Failed! Please try again.');
+          window.location.href = '/user/paymentFailed';
+        });
+        rzp.open();
+      }
+    })
+    .catch(error => {
+      console.error('Error creating Razorpay order:', error);
+      alert('Error creating Razorpay order. Please try again later.');
+      window.history.back(); // Redirect to previous page
+    });
+  } else {
+    // For COD payment method
+    const totalAmount = document.getElementById('totalAmount').value;
+    if (totalAmount > 1000) {
+      // Show alert for COD not available
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'COD is not available for orders above Rs 1000.'
+      });
+    } else {
+      document.getElementById('orderForm').submit();
+    }
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const applyCouponBtn = document.getElementById('applyCouponBtn');
+    const couponSelect = document.getElementById('coupon');
+    const selectedCouponInput = document.getElementById('selectedCoupon'); // New input for coupon code
+    const cartTotalElement = document.getElementById('cartTotal');
+    const errorMessageElement = document.getElementById('errorMessage'); // Element to display error message
+
+    applyCouponBtn.addEventListener('click', () => {
+        const selectedCoupon = selectedCouponInput.value; 
+        const totalAmount = parseFloat(cartTotalElement.textContent.replace('₹', '')); 
+
+      
+        fetch(`/user/applyCoupon?coupon=${selectedCoupon}&total=${totalAmount}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to apply coupon');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                // Update total price displayed in the UI
+                cartTotalElement.textContent = `After applying the coupon, you pay only ₹${data.newTotal}`;
+                errorMessageElement.textContent = ''; 
+            })
+            .catch(error => {
+                console.error('Failed to apply coupon:', error);
+                
+                errorMessageElement.textContent = 'Total amount is less than minimum purchase .so the coupon is not valid';
+            });
+    });
+});
+
+
+</script>
+
+</div>
+
+<!-- footer -->
+<footer>
+    <div class="foot-container items">
+        <ul class="footer-list">
+            <li class="caption">Company</li>
+            <li>About</li>
+            <li>Careers</li>
+            <li>Team</li>
+            <li>Visit Our Showroom</li>
+        </ul>
+    </div>
+    <div class="foot-container items">
+        <ul class="footer-list">
+            <li class="caption">Contact us</li>
+            <li>Help & Support</li>
+            <li>Partner With Us</li>
+            <li>Ride With us</li>
+            <li class="caption"> Legal</li>
+            <li>Terms & Conditions</li>
+            <li>Cookie Policy</li>
+            <li>Privacy policy</li>
+        </ul>
+    </div>
+    <div class="foot-container items">
+        <div>
+            <div> <img src="/image/Logo.png" alt="" style="width: 150px; height: 150px;"></div>
+            <div>
+                <p>All trademarks are properties of their respective owners. 2008-2023 © WATCHHUT Ltd. All rights
+                    reserved</p>
+            </div>
+        </div>
+    </div>
+    <div class="foot-container items">
+        <ul class="footer-list">
+            <li class="caption">Social links</li>
+            <li><i class="fab fa-linkedin"></i>
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-youtube"></i>
+                <i class="fab fa-twitter"></i>
+            </li>
+        </ul>
+    </div>
+</footer>
+</body>
+</html>

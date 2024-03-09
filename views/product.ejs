@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watchhut</title>
+    <link rel="stylesheet" href="/userProduct.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kaisei+Tokumin:wght@400;500;700&family=Lobster+Two&family=Oswald:wght@300;500&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-Gn5384xqNTTjX/lGQbT/6NJGBzxlkOuFKB0J/2vCV9orY6jx1dBbS5tBBaPQgN9tDK7R1e/IaAET6Ta38PCoRQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://kit.fontawesome.com/99a477596c.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <img src="/image/Logo.png" alt="" width="100px">
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="">Home</a></li>
+                        <li><a href="">Product</a></li>
+                        <li><a href="">About</a></li>
+                        <li><a href="">Contact</a></li>
+                        <% if (typeof user !== 'undefined') { %>
+                        <% if (user) { %>
+                            <li><a href="/user/logout">Logout</a></li>
+                            <li><a href="/user/cart"><i class="fas fa-cart-shopping"></i></a></li>
+                            <li class="text-danger"><a href="/user/profile"><i class="fa-solid fa-user"></i>Hello,<%= user.username %></a></li>
+                        <% } else { %>
+                            <li><a href="/user/login">Login</a></li>
+                        <% } %>
+                        <% } %>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <form action="/user/search" method="post">
+          <input type="text" name="searchQuery" placeholder="Search products...">
+          <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="small-container">
+        <div class="row">
+            <div class="col-3">
+                <div class="sidebar">
+                    <h2>Categories</h2>
+                   
+                    <ul id="categoryList">
+                        <li><a href="/user/product">All</a></li>
+                        <% if (typeof categories !== 'undefined') { %>
+                            <% categories.forEach(category => { %>
+                               
+                                <li><a href="/user/product/?category=<%= category.name %>" class="category-link"><%= category.name %></a></li>
+                            <% }); %>
+                        <% } %>
+                    </ul>
+                </div>
+                <div class="sidebar">
+              <!-- Update the price range checkboxes to include the priceRange parameter in the href -->
+<h3>Filter by Price:</h3>
+<a href="/user/product?priceRange=0-500">0 RS to 500 RS</a><br>
+<a href="/user/product?priceRange=500-1000">500 RS to 1000 RS</a><br>
+<a href="/user/product?priceRange=1000-1500">1000 RS to 1500 RS</a><br>
+<a href="/user/product?priceRange=1500-2000">1500 RS to 2000 RS</a><br>
+
+                </div>
+            </div>
+         
+                <% if (typeof products !== 'undefined' && products.length > 0) { %>
+                    <% products.forEach(product => { %>
+                        <div class="col-4">
+                            <a href="/user/product/<%= product.id %>">
+                                <img src="<%= product.image %>" alt="<%= product.productName %>" style="width:100%">
+                            </a>
+                            <h4><%= product.productName %></h4>
+                            <h6><%= product.category.name %></h6>
+                            <div class="rating">
+                                <% for (let i = 0; i < product.rating; i++) { %>
+                                    <i class="fa fa-star"></i>
+                                <% } %>
+                                <% for (let i = 0; i < 5 - product.rating; i++) { %>
+                                    <i class="fa fa-star-o"></i>
+                                <% } %>
+                            </div>
+                            <p>₹<%= product.price %></p>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <h3 class="blink" style="color: red; text-align: center;">No products found for the given search.</h3>
+
+                <% } %>
+     
+            
+        </div>
+    </div>
+
+    <footer>
+        <div class="foot-container items">
+            <ul class="footer-list">
+                <li class="caption">Company</li>
+                <li>About</li>
+                <li>Careers</li>
+                <li>Team</li>
+                <li>Visit Our Showroom</li>
+            </ul>
+        </div>
+        <div class="foot-container items">
+            <ul class="footer-list">
+                <li class="caption">Contact us</li>
+                <li>Help & Support</li>
+                <li>Partner With Us</li>
+                <li>Ride With us</li>
+                <li class="caption"> Legal</li>
+                <li>Terms & Conditions</li>
+                <li>Cookie Policy</li>
+                <li>Privacy policy</li>
+            </ul>
+        </div>
+        <div class="foot-container items">
+            <div>
+                <div> <img src="/image/Logo.png" style="width: 150px;height: 150px;" alt=""></div>
+                <div>
+                    <p>All trademarks are properties of their respective owners. 2008-2023 © WATCHHUT Ltd. All rights reserved</p>
+                </div>
+            </div>
+        </div>
+        <div class="foot-container items">
+            <ul class="footer-list">
+                <li class="caption">Social links</li>
+                <li><i class="fab fa-linkedin"></i>
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-youtube"></i>
+                    <i class="fab fa-twitter"></i>
+                </li>
+            </ul>
+        </div>
+    </footer>
+    <script>
+      
+    </script>
+</body>
+
+</html>

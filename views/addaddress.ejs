@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Address</title>
+    <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+    <div class="wrapper">
+        <form action="/user/addAddress" method="POST">
+            <h1>Add Address</h1>
+            
+            <div class="input-box">
+                <input type="text" placeholder="Street" id="street" name="street" required>
+            </div>
+            
+            <div class="input-box">
+                <input type="text" placeholder="City" id="city" name="city" required>
+            </div>
+            
+            <div class="input-box">
+                <input type="text" placeholder="State" id="state" name="state" required>
+            </div>
+            
+            <div class="input-box">
+                <input type="text" placeholder="Pin Code" id="pincode" name="pincode" required>
+            </div>
+            
+            <div class="input-box">
+                <input type="text" placeholder="Mobile" id="mobile" name="mobile" required>
+            </div>
+            <h4>Add other information</h4>
+            <div class="input-box">
+                <input type="text" placeholder="Last Name" id="lastname" name="lastname" required>
+              </div>
+          
+              <div class="input-box">
+                <input type="number" placeholder="Age" id="age" name="age" required>
+              </div>
+          
+              <div class="input-box">
+                <select id="gender" name="gender" required>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            <button class="btn" type="submit">Add Address</button>
+        </form>
+        <% if (typeof error !== 'undefined') { %>
+            <p style="color: white; text-align: center;"><%= error %></p>
+            <% }%>
+       
+    </div>
+</body>
+</html>
